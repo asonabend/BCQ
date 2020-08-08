@@ -282,7 +282,7 @@ if __name__ == "__main__":
 	env, is_atari, state_dim, num_actions = utils.make_env(args.env, atari_preprocessing)
 	parameters = atari_parameters if is_atari else regular_parameters
 
-	if args.env != 'Riverswim' # Riverswim always starts at (0,0)
+	if args.env != 'Riverswim': # Riverswim always starts at (0,0)
 		env.seed(args.seed)
 	torch.manual_seed(args.seed)
 	np.random.seed(args.seed)
