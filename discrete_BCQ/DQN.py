@@ -95,8 +95,8 @@ class DQN(object):
 		if np.random.uniform(0,1) > eps:
 			with torch.no_grad():
 				state = torch.FloatTensor(state).reshape(self.state_shape).to(self.device)
-				if len(self.Q(state).argmax(1)>1):
-					print(self.Q(state).argmax(1))
+				#if len(self.Q(state).argmax(1)>1):
+				print(self.Q(state).argmax(1))
 				return int(self.Q(state).argmax(1))
 		else:
 			return np.random.randint(self.num_actions)
