@@ -110,7 +110,8 @@ class discrete_BCQ(object):
 		# otherwise, select random action
 		if np.random.uniform(0,1) > self.eval_eps:
 			with torch.no_grad():
-				state = torch.FloatTensor(state).reshape(self.state_shape).to(self.device)
+				#state = torch.FloatTensor(state).reshape(self.state_shape).to(self.device)
+				state = torch.tensor(state).reshape(self.state_shape).to(self.device).float()
 				q, imt, i = self.Q(state)
 				imt = imt.exp()
 				imt = (imt/imt.max(1, keepdim=True)[0] > self.threshold).float()
