@@ -64,7 +64,8 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 			if t < parameters["start_timesteps"]:
 				action = env.action_space.sample()
 			else:
-				action = policy.select_action(np.array(state))
+				action = policy.select_action(state)#policy.select_action(np.array(state))
+				
 
 		# Perform action and log results
 		next_state, reward, done, info = env.step(action)
