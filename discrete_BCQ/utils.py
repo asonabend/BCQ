@@ -297,6 +297,7 @@ class AtariPreprocessing(object):
 
 
 # Create environment, add wrapper if necessary and create env_properties
+# modified to allow discrete state space as well
 def make_env(env_name, atari_preprocessing):
 	env = gym.make(env_name)
 	
@@ -307,7 +308,7 @@ def make_env(env_name, atari_preprocessing):
 		atari_preprocessing["state_history"], 
 		atari_preprocessing["frame_size"], 
 		atari_preprocessing["frame_size"]
-	) if is_atari else env.observation_space.shape[0]
+	) if is_atari else 1#env.observation_space.shape[0]
 
 	return (
 		env,
