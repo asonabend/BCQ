@@ -163,7 +163,7 @@ def train_BCQ(env, replay_buffer, is_atari, num_actions, state_dim, device, args
 
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
-def eval_policy(policy, env_name, seed, eval_episodes=10):
+def eval_policy(policy, env_name, seed, eval_episodes=10000):
 	eval_env, _, _, _ = utils.make_env(env_name, atari_preprocessing)
 	eval_env.seed(seed + 100)
 
@@ -296,3 +296,4 @@ if __name__ == "__main__":
 		interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters)
 	else:
 		train_BCQ(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters)
+
