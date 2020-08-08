@@ -50,7 +50,7 @@ class DQN(object):
 		optimizer="Adam",
 		optimizer_parameters={},
 		polyak_target_update=False,
-		target_update_frequency=8e3,
+		target_update_frequency=100,#8e3,
 		tau=0.005,
 		initial_eps = 1,
 		end_eps = 0.001,

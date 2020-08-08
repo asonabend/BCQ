@@ -234,7 +234,7 @@ if __name__ == "__main__":
 		"batch_size": 64,
 		"optimizer": "Adam",
 		"optimizer_parameters": {
-			"lr": 3e-4
+			"lr": 3e-2
 		},
 		"train_freq": 1,
 		"polyak_target_update": True,
