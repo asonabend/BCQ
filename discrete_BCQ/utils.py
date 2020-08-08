@@ -299,16 +299,25 @@ class AtariPreprocessing(object):
 # Create environment, add wrapper if necessary and create env_properties
 # modified to allow discrete state space as well
 def make_env(env_name, atari_preprocessing):
-	env = gym.make(env_name)
-	
-	is_atari = gym.envs.registry.spec(env_name).entry_point == 'gym.envs.atari:AtariEnv'
+	if env_name == 'Riverswim':
+		env = riverSwim(20)
+		is_atari = False
+	else:
+		env = gym.make(env_name)
+		is_atari = gym.envs.registry.spec(env_name).entry_point == 'gym.envs.atari:AtariEnv'
+		
 	env = AtariPreprocessing(env, **atari_preprocessing) if is_atari else env
 
-	state_dim = (
+	if is_atari:
+		state_dim = (
 		atari_preprocessing["state_history"], 
 		atari_preprocessing["frame_size"], 
 		atari_preprocessing["frame_size"]
-	) if is_atari else 1#env.observation_space.shape[0]
+	)  
+	elif env_name == 'Riverswim':
+		state_dim = env.observation_dim
+	else:# one of the toy examples (i.e. Taxi)
+		state_dim = 1#env.observation_space.shape[0]
 
 	return (
 		env,
@@ -316,3 +325,68 @@ def make_env(env_name, atari_preprocessing):
 		state_dim,
 		env.action_space.n
 	)
+
+###########################################################################
+################  openAI wrapper for Riverswim environment ################
+###########################################################################
+
+
+import gym
+from gym import spaces
+
+class riverSwim(gym.Env):
+    """Riverswim Environment that follows gym interface"""
+    #metadata = {'render.modes': ['human']}
+    def __init__(self,episode_length):
+        super(riverSwim, self).__init__()
+        self.time = 0
+        self.state = 0
+        self.episode_length = episode_length
+        self.done = False
+        self._max_episode_steps = episode_length
+        # Define action and observation space
+        N_DISCRETE_ACTIONS = 2
+        N_DISCRETE_STATES = 6 
+        N_TIME_STEPS = episode_length
+        self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
+        self.observation_space = spaces.MultiDiscrete((N_DISCRETE_STATES, N_TIME_STEPS))
+        self.observation_dim = 2
+    # Execute one time step within the environment
+    def step(self,action):
+        if action not in [0,1]:
+            return 'error'        
+        if self.time == self.episode_length:
+            self.done = True
+        self.time += 1
+        self.reward = 0 # no reward
+        if self.state == 0:
+            if action == 1: # swim to the right
+                if np.random.binomial(1,.6)==1: # w.p. = 0.6 get to the right otherwise stay in state = 0
+                    self.state = 1                
+            else: #action == 0, stays in state = 0 and has the reward 5/1000
+                self.reward = 5/1000
+        elif self.state == 5:
+            if action == 1: # swim to the right
+                if np.random.binomial(1,.6)==1: # w.p. = 0.6 swim succesfully to the right 
+                    self.reward = 1
+                else: # w.p. 0.4 current takes it to the left
+                    self.state = 4
+            else: # action == 0
+                self.state = 4
+        else: #states 1,2,3,4
+            if action == 1: # swim to the right
+                dice = np.random.choice(3, 1, p=[.05,0.6,0.35])
+                if dice==0: # w.p. = 0.05 current takes it to the left
+                    self.state -= 1
+                elif dice==2: # w.p. = 0.6 current it stays in the same state, w.p. 0.35 gets to the right
+                    self.state += 1
+            else: # action == 0
+                self.state -= 1
+        info = 'na'
+        return np.array([self.state, self.time]),self.reward,self.done,info
+    def reset(self):
+    # Reset the state of the environment to an initial state
+        self.time = 0
+        self.state = 0
+        self.done = False
+        return np.array([self.state, self.time])
