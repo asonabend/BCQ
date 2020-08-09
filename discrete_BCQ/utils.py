@@ -343,7 +343,7 @@ class riverSwim(gym.Env):
         self.state = 0
         self.episode_length = episode_length
         self.done = False
-        self._max_episode_steps = episode_length
+        self._max_episode_steps = episode_length -1
         # Define action and observation space
         N_DISCRETE_ACTIONS = 2
         N_DISCRETE_STATES = 6 

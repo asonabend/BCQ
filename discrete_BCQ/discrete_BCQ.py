@@ -35,13 +35,13 @@ class Conv_Q(nn.Module):
 class FC_Q(nn.Module):
 	def __init__(self, state_dim, num_actions):
 		super(FC_Q, self).__init__()
-		self.q1 = nn.Linear(state_dim, 128)#256
-		self.q2 = nn.Linear(128, 128)#256
-		self.q3 = nn.Linear(128, num_actions)#256
+		self.q1 = nn.Linear(state_dim, 256)
+		self.q2 = nn.Linear(256, 256)
+		self.q3 = nn.Linear(256, num_actions)
 
-		self.i1 = nn.Linear(state_dim, 128)#256
-		self.i2 = nn.Linear(128, 128)#256
-		self.i3 = nn.Linear(128, num_actions)#256		
+		self.i1 = nn.Linear(state_dim, 256)
+		self.i2 = nn.Linear(256, 256)
+		self.i3 = nn.Linear(256, num_actions)
 
 
 	def forward(self, state):
